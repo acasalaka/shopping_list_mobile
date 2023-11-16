@@ -15,13 +15,12 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange[50],
       appBar: AppBar(
         title: const Text(
           'Shopping List',
-          style: const TextStyle(color: Colors.black)
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
       body: SingleChildScrollView(
