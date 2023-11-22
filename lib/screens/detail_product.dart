@@ -1,21 +1,19 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shopping_list/models/product.dart';
-import 'package:shopping_list/screens/detail_product.dart';
 import 'package:shopping_list/widgets/left_drawer.dart';
+import 'package:shopping_list/screens/list_product.dart';
 
-class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key}) : super(key: key);
 
-  @override
-  _ProductPageState createState() => _ProductPageState();
-}
+class DetailProductPage extends StatelessWidget {
+  const DetailProductPage({Key? key, required this.id}) : super(key: key);
+  final int id;
 
-class _ProductPageState extends State<ProductPage> {
   Future<List<Product>> fetchProduct() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/json/');
+        'http://127.0.0.1:8000/json/${id}');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -38,7 +36,7 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Product'),
+          title: const Text('Detail Product'),
         ),
         drawer: const LeftDrawer(),
         body: FutureBuilder(
@@ -77,7 +75,7 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text("${snapshot.data![index].fields.price}"),
+                            Text("Price: ${snapshot.data![index].fields.price}"),
                             const SizedBox(height: 10),
                             Text(
                                 "${snapshot.data![index].fields.description}"),
@@ -85,10 +83,10 @@ class _ProductPageState extends State<ProductPage> {
                               onPressed: () async {
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => DetailProductPage(id: snapshot.data![index].pk)),
+                                  MaterialPageRoute(builder: (context) => ProductPage()),
                                 );
                               },
-                              child: const Text('Detail Product'),
+                              child: const Text('Kembali'),
                             ),
                           ],
                         ),

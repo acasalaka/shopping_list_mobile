@@ -6,16 +6,27 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_list/screens/login.dart';
 
-class ShopCard extends StatelessWidget {
-  final ShopItem item;
+class ShoplistCard extends StatelessWidget {
+  final ShoplistItem item;
 
-  const ShopCard(this.item, {super.key}); // Constructor
+  const ShoplistCard(this.item, {super.key}); // Constructor
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
+    var buttonColor;
+    if (item.name.compareTo("Lihat Item") == 0) {
+      buttonColor= Colors.indigo;
+    }
+    else if (item.name.compareTo("Tambah Item") == 0) {
+      buttonColor= Colors.blue;
+    }
+    else if (item.name.compareTo("Logout") == 0) {
+      buttonColor= Colors.cyan;
+    }
     return Material(
-      color: Colors.indigo,
+      color: buttonColor,
       child: InkWell(
         // Area responsive terhadap sentuhan
         onTap: () async {
@@ -23,19 +34,18 @@ class ShopCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
-          // Navigate ke route yang sesuai (tergantung jenis tombol)
-          if (item.name == "Tambah Produk") {
-            // TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ShopFormPage.
+                content: Text("Kamu telah menekan tombol ${item.name}")));
+          if (item.name == "Tambah Item") {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ShopFormPage()));
-          } else if (item.name == "Lihat Produk") {
+                MaterialPageRoute(builder: (context) => const ProductFormPage()));
+          }
+          else if (item.name == "Lihat Item") {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ProductPage()));
-          } else if (item.name == "Logout") {
+          }
+          else if (item.name == "Logout") {
             final response = await request.logout(
-              // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                "http://127.0.0.1:8000/auth/login/");
+                "http://10.0.2.2:8000/auth/logout/");
             String message = response["message"];
             if (response['status']) {
               String uname = response["username"];
@@ -48,7 +58,7 @@ class ShopCard extends StatelessWidget {
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(message),
+                content: Text("$message"),
               ));
             }
           }
