@@ -5,16 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:shopping_list/screens/menu.dart';
 import 'dart:convert';
 
-// TODO: Impor drawer yang sudah dibuat sebelumnya
-
-class ShopFormPage extends StatefulWidget {
-  const ShopFormPage({super.key});
+class ProductFormPage extends StatefulWidget {
+  const ProductFormPage({super.key});
 
   @override
-  State<ShopFormPage> createState() => _ShopFormPageState();
+  State<ProductFormPage> createState() => _ProductFormPageState();
 }
 
-class _ShopFormPageState extends State<ShopFormPage> {
+class _ProductFormPageState extends State<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
   int _price = 0;
@@ -22,6 +20,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -32,7 +31,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
-      // TODO: Tambahkan drawer yang sudah dibuat di sini
       drawer: const LeftDrawer(),
       body: Form(
         key: _formKey,
@@ -67,13 +65,12 @@ class _ShopFormPageState extends State<ShopFormPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: "Harga",
-                        labelText: "Harga",
+                        hintText: "Price",
+                        labelText: "Price",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
-                      // TODO: Tambahkan variabel yang sesuai
                       onChanged: (String? value) {
                         setState(() {
                           _price = int.parse(value!);
@@ -81,10 +78,10 @@ class _ShopFormPageState extends State<ShopFormPage> {
                       },
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
-                          return "Harga tidak boleh kosong!";
+                          return "Price tidak boleh kosong!";
                         }
                         if (int.tryParse(value) == null) {
-                          return "Harga harus berupa angka!";
+                          return "Price harus berupa angka!";
                         }
                         return null;
                       },
@@ -102,7 +99,6 @@ class _ShopFormPageState extends State<ShopFormPage> {
                       ),
                       onChanged: (String? value) {
                         setState(() {
-                          // TODO: Tambahkan variabel yang sesuai
                           _description = value!;
                         });
                       },
@@ -125,15 +121,12 @@ class _ShopFormPageState extends State<ShopFormPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            // Kirim ke Django dan tunggu respons
-                            // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await request.postJson(
-                                "http://127.0.0.1:8000/auth/login/",
+                                "http://127.0.0.1:8000/create-flutter/",
                                 jsonEncode(<String, String>{
                                   'name': _name,
-                                  'price': _price.toString(),
+                                  'amount':_price.toString(),
                                   'description': _description,
-                                  // TODO: Sesuaikan field data sesuai dengan aplikasimu
                                 }));
                             if (response['status'] == 'success') {
                               ScaffoldMessenger.of(context)
